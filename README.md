@@ -8,12 +8,58 @@ The application consists of two services.
  
 ### metadata-api ###
 The metadata-api is a Python Flask application. The API consist of two endpoints:  
-* /upload  
-  POST
+* POST /upload  
+  REQUEST  
+  ```
+  
+  ```
+  RESPONSE 
+  
+  200 application/json  
+  ```
+  {
+      "data": {
+          "added": "string", 
+          "updated": "string", 
+          "skipped": "string"
+      }, 
+      "response": {
+          "code": "200", 
+          "status": "success"
+      }
+  }
+  ```
+  
+  400 application/json  
+  ```
+  {
+      "data": {
+          "message": "file upload error"
+      }, 
+      "response": {
+          "code": "400", 
+          "status": "client error"
+      } 
+  }
+  ```
+  
+  500 application/json  
+  ```
+  {
+      "data": {
+          "message": "server error"
+      }, 
+      "response": {
+          "code": "500", 
+          "status": "server error"
+      }
+  } 
+  ```
 
-* /metadata/<iswc>  
-  GET  
-  200 Response: application/json  
+* GET /metadata/<iswc>  
+  RESPONSE  
+  
+  200 application/json  
   ```
   {
       "data": {
@@ -32,7 +78,7 @@ The metadata-api is a Python Flask application. The API consist of two endpoints
   }
   ```
   
-  404 Response: application/json  
+  404 application/json  
   ```
   {
       "data": {
@@ -45,7 +91,7 @@ The metadata-api is a Python Flask application. The API consist of two endpoints
   }
   ```
   
-  500 Response: application/json
+  500 application/json
   ```
   {
       "data": {
