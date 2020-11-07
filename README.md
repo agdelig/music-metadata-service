@@ -1,5 +1,53 @@
 # music-metadata-service #
+The music-metadata-service is used to store metadata 
+## Requirements ##
+The music-metadaa-servuce is a Dockerized application. The system which the service is 
+to be deployed needs to have installed  
+ * docker v.
+ * docker-compose v.
+ * python 3.8 (optional for running the tests)
 
+## Tests ## 
+For running the tests there is no need to run the docker containers. In such case python3.8 
+needs to be installed.
+
+### Unit tests ### 
+-TODO-
+```
+cd 
+python
+```
+
+### Integration tests ### 
+-TODO-
+```
+cd 
+python
+```
+
+## Run the application ## 
+
+-TODO-
+```
+cd 
+docker-compose up -d
+```
+
+## Assumptions ## 
+The user provides csv files with metadata. This data is used to add new entries 
+or update existing ones on the Database.  
+It is assumed that:  
+
+ * csv files contain the following headers:  
+     * title 
+     * contributors 
+     * iswc 
+     * source 
+     * id
+ * Every record on the csv file must contain an iswc  
+   (In case no iswc the record is discarded)
+ 
+     
 ## Services ##
 
 The application consists of two services.  
@@ -7,11 +55,11 @@ The application consists of two services.
  * Postgres  
  
 ### metadata-api ###
-The metadata-api is a Python Flask application. The API consist of two endpoints:  
+The metadata-api API consist of two endpoints:  
 * POST /upload  
-  REQUEST  
+  REQUEST    
   ```
-  
+  TODO
   ```
   RESPONSE 
   
@@ -19,9 +67,16 @@ The metadata-api is a Python Flask application. The API consist of two endpoints
   ```
   {
       "data": {
-          "added": "string", 
-          "updated": "string", 
-          "skipped": "string"
+          "added": {
+              "amount": "string"
+          }, 
+          "updated": {
+              "ammount": "string"
+          }, 
+          "skipped": {
+              "amount": "string", 
+              "skipped_line": ["string"]
+          }
       }, 
       "response": {
           "code": "200", 
@@ -56,7 +111,28 @@ The metadata-api is a Python Flask application. The API consist of two endpoints
   } 
   ```
 
-* GET /metadata/<iswc>  
+* GET /download?iswc=iswc_no  
+  RESPONSE
+ 
+  200 application/json
+  
+  ```
+  TODO
+  ```
+
+  404 application/json
+  -TODO-
+  ```
+  TODO
+  ```
+  
+  500 application/json
+  -TODO-
+  ```
+  TODO
+  ```
+
+* GET /metadata/iswc_no  
   RESPONSE  
   
   200 application/json  
