@@ -186,7 +186,7 @@ As the data stored is metadata a relationship database is more suitable. Postgre
 
 The DB EERD is as follows  
 
-![Alt text](/images/bmat_DB_EERD_dark.png?raw=true "Optional Title")  
+![Alt text](./images/bmat_DB_EERD_dark.png?raw=true "Optional Title")  
 
 The data is stored on three tables  
 
