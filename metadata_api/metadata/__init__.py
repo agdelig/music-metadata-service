@@ -6,15 +6,15 @@ from endpoints.download import Download
 from metadata.config import configuration
 import os
 
+app = Flask(__name__)
+api = Api(app)
+db = SQLAlchemy()
+
 
 def create_app():
-    app = Flask(__name__)
     env_config = configuration[os.getenv('ENV', 'PROD')]
     app.config.from_object(env_config)
 
-    api = Api(app)
-
-    #db = SQLAlchemy(app)
     #db.create_all()
 
     api.add_resource(Upload, '/upload')

@@ -1,6 +1,5 @@
 from flask_restful import Resource, reqparse
-import base64
-
+from common import parse_csv_b64_str_to_list
 
 class Upload(Resource):
     def __init__(self):
@@ -17,22 +16,6 @@ class Upload(Resource):
 
     def post(self):
         b64_csv_file = self.req_parses.parse_args(strict=True).get('file', None)
-
-        csv_file = base64.b64decode(b64_csv_file)
-
-        csv1 = base64.b64decode(b64_csv_file).decode('utf-8').split(',')
-        for v in csv1:
-            print(v)
-
-        import csv, io
-
-        freader = csv.reader(io.StringIO(csv_file.decode()))
-        print(type(csv_file.decode()))
-        reader = csv.DictReader(freader, 'rU')
-        dict_list = []
-
-        for line in reader:
-            dict_list.append(line)
-        print(dict_list)
+        parse_csv_b64_str_to_list(b64_csv_file)
 
         return {"sent": "got"}
