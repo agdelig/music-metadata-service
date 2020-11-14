@@ -1,6 +1,5 @@
 from flask_restful import Resource, reqparse
-from common import parse_csv_b64_str_to_list
-from metadata import mongo
+from common import _parse_csv_b64_str_to_list, _insert_to_db
 
 
 class Upload(Resource):
@@ -18,8 +17,8 @@ class Upload(Resource):
 
     def post(self):
         b64_csv_file = self.req_parses.parse_args(strict=True).get('file', None)
-        entries = parse_csv_b64_str_to_list(b64_csv_file)
-        result, skipped = db_update(entries)
+        entries = _parse_csv_b64_str_to_list(b64_csv_file)
+        result, skipped = _insert_to_db(entries)
 
         return {
             "sent": "got",
@@ -27,7 +26,7 @@ class Upload(Resource):
             'skipped': str(skipped)
         }
 
-
+'''
 def db_update(entries):
     added = []
     skipped = 0
@@ -62,3 +61,4 @@ def db_update(entries):
     list(map(lambda x: str(x.pop('_id')), result))
 
     return result, skipped
+'''
