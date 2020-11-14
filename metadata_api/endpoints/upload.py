@@ -12,53 +12,16 @@ class Upload(Resource):
                             location='json')
         self.req_parses = parser
 
-    def get(self):
-        return {'upload': 'success'}
-
     def post(self):
         b64_csv_file = self.req_parses.parse_args(strict=True).get('file', None)
         entries = _parse_csv_b64_str_to_list(b64_csv_file)
         result, skipped = _insert_to_db(entries)
 
         return {
-            "sent": "got",
             'data': result,
-            'skipped': str(skipped)
-        }
-
-'''
-def db_update(entries):
-    added = []
-    skipped = 0
-    for e in entries:
-        if len(e['iswc']) == 0:
-            skipped += 1
-            continue
-
-        added.append(e['iswc'])
-
-        entry_contributors = str.split(e.pop('contributors'), '|')
-        entry_sources = [
-            {
-                'source': e.pop('source'),
-                'id': e.pop('id')
+            'skipped': str(skipped),
+            'responce': {
+                'code': '200',
+                'status': 'success'
             }
-        ]
-        mongo.db.music.update({'iswc': e['iswc']},
-                              {
-                                  '$setOnInsert': e,
-                                  '$push': {
-                                      'contributors': {
-                                          '$each': entry_contributors
-                                      },
-                                      'sources': {
-                                          '$each': entry_sources
-                                      }
-                                  }
-                              }, upsert=True)
-
-    result = list(mongo.db.music.find({'iswc': {'$in': added}}))
-    list(map(lambda x: str(x.pop('_id')), result))
-
-    return result, skipped
-'''
+        }

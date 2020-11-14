@@ -1,10 +1,12 @@
 # music-metadata-service #
-The music-metadata-service is used to store metadata 
+The music-metadata-service is used to store metadata derived from uploaded csv files in a 
+database as well as downloading records from a database to a csv file.
 ## Requirements ##
-The music-metadaa-servuce is a Dockerized application. The system which the service is 
+The music-metadata-service is a Dockerized application. The system which the service is 
 to be deployed needs to have installed  
- * docker v.
- * docker-compose v.
+ * docker v19.03.13
+ * docker-compose v1.23.1
+ * port 5000
  * python 3.8 (optional for running the tests)
 
 ## Tests ## 
@@ -26,179 +28,176 @@ python
 ```
 
 ## Run the application ## 
-
--TODO-
+From the application's root directory run 
 ```
-cd 
 docker-compose up -d
 ```
 
 ## Assumptions ## 
 The user provides csv files with metadata. This data is used to add new entries 
-or update existing ones on the Database.  
+or update existing ones in the Database.  
 It is assumed that:  
-
- * csv files contain the following headers:  
-     * title 
-     * contributors 
-     * iswc 
-     * source 
-     * id
- * Every record on the csv file must contain an iswc  
-   (In case no iswc the record is discarded)
+* csv files contain the following headers:  
+* title  
+* contributors  
+* iswc  
+* source   
+* id  
+* Every record on the csv file must contain an iswc  
+  (In case no iswc is provided, the record is discarded)  
+* A contributor name is assigned to a particular iswc record only once  
+  (contributor names are treated as unique)  
+* source and id are stored on an array for a given iswc  
+* Multiple contributors are returned in the csv file on the "contributors" column 
+  seperated by "|"  
+* Multiple ids as well as sources are returned in the csv file on their respected 
+  columnsseperated by "|"   
  
      
 ## Services ##
 
 The application consists of two services.  
  * metadata-api  
- * Postgres  
+ * MongoDB 
  
 ### metadata-api ###
 The metadata-api API consist of two endpoints:  
 * POST /upload  
-  REQUEST    
+  REQUEST  
+  Send the base64 encoded csv file   
   ```
-  TODO
+  { 
+    "file": "base64_string" 
+  } 
   ```
   RESPONSE 
   
   200 application/json  
   ```
   {
-      "data": {
-          "added": {
-              "amount": "string"
-          }, 
-          "updated": {
-              "ammount": "string"
-          }, 
-          "skipped": {
-              "amount": "string", 
-              "skipped_line": ["string"]
-          }
-      }, 
-      "response": {
-          "code": "200", 
-          "status": "success"
-      }
-  }
+    "data": [
+        {
+            "iswc": "string",
+            "contributors": ["string"],
+            "sources": [
+                {
+                    "source": "string",
+                    "id": "string"
+                }
+            ],
+            "title": "string"
+        },
+    ],
+    "skipped": "string",
+    "responce": {
+        "code": "200",
+        "status": "success"
+    }
+  } 
   ```
   
   400 application/json  
   ```
-  {
-      "data": {
-          "message": "file upload error"
+  { 
+      "data": { 
+          "message": "file upload error" 
       }, 
-      "response": {
+      "response": { 
           "code": "400", 
-          "status": "client error"
+          "status": "client error" 
       } 
-  }
+  } 
   ```
   
   500 application/json  
   ```
-  {
-      "data": {
-          "message": "server error"
+  { 
+      "data": { 
+          "message": "server error" 
       }, 
-      "response": {
+      "response": { 
           "code": "500", 
-          "status": "server error"
-      }
+          "status": "server error" 
+      } 
   } 
   ```
 
-* GET /download?iswc=iswc_no  
+* POST /download  
+  Make a POST request with a list of all the iswc records required for metadata retrieval.  
+  REQUEST  
+  ```
+  { 
+      "iswc": ["string"]
+  } 
+  ```
+  
   RESPONSE
  
   200 application/json
   
   ```
-  TODO
-  ```
-
-  404 application/json
-  -TODO-
-  ```
-  TODO
-  ```
-  
-  500 application/json
-  -TODO-
-  ```
-  TODO
-  ```
-
-* GET /metadata/iswc_no  
-  RESPONSE  
-  
-  200 application/json  
-  ```
   {
-      "data": {
-          "iswc": "string", 
-          "title": "string", 
-          "contributors": ["string"], 
-          "source": [ 
-              "source": "string", 
-              "id", "string"
-          ]
-      }, 
-      "response": {
-          "code": "200", 
-          "status": "success"
-      }
+    "file": "string",
+    "responce": {
+        "code": "200",
+        "status": "success"
+    }
   }
   ```
-  
+
   404 application/json  
   ```
-  {
-      "data": {
-          message": "iswc is incorrect or does not exist"
+  { 
+      "data": { 
+          message": "iswc is incorrect or does not exist" 
       }, 
-      "response": {
+      "response": { 
           "code": "404", 
-          "status": "client error"
-      }
-  }
+          "status": "client error" 
+      } 
+  } 
   ```
   
   500 application/json
   ```
-  {
-      "data": {
-          "message": "server error"
+  { 
+      "data": { 
+          "message": "server error" 
       }, 
-      "response": {
+      "response": { 
           "code": "500", 
-          "status": "server error"
-      }
-  }
+          "status": "server error" 
+      } 
+  } 
   ```
 
-### Postgres ###
+### MongoDB 
+The database chosen for this application is MongoDB. Csv rows are entered on the 
+"music-meta" database on one collection ("music") following the schema:  
+```buildoutcfg
+ {
+    "_id" : ObjectId("string"), 
+    "iswc" : "string", 
+    "contributors" : ["string"], 
+    "sources" : [ 
+        { 
+            "source" : "string", 
+            "id" : "string" 
+        }, 
+    ], 
+    "title" : "string" 
+ }
+```
+**ATTENTIO !!!**  
+The mongo container has no volumes attached to it. This results in data not 
+being preserved once the container has been removed.  
+This choice was made to avoid issues regarding user permissions on creating 
+folders and files on the host OS.  
 
-As the data stored is metadata a relationship database is more suitable. Postgres is chosen for this implementation.  
-
-The DB EERD is as follows  
-
-![Alt text](./images/bmat_DB_EERD_dark.png?raw=true "Optional Title")  
-
-The data is stored on three tables  
-
- * METADATA  
-     * iswc  
-     * title  
- * CONTRIBUTORS  
-     * iswc  
-     * contributor  
- * SOURCE  
-     * iswc  
-     * source  
-     * id  
- 
- 
+### Issues not addressed 
+Contributors' names are currently handled as unique. This on the real world 
+is certainly not the case as more than one person can share the same name.  
+The source and id combination should be considered to be unique as it points to 
+an external set of records (source: sony, id: 4). All ids and sources are 
+concated in one column on the csv resulting in not having a clear picture of where 
+this information has derived from. 

@@ -12,11 +12,14 @@ class Download(Resource):
                             location='json')
         self.req_parses = parser
 
-    def get(self):
-        return {'download': 'success'}
-
     def post(self):
         iswcs = self.req_parses.parse_args(strict=True).get('iswc', None)
         file = _query_to_base64_csv(iswcs)
 
-        return{'download': 'got', 'file': file}
+        return{
+            'file': file,
+            'responce': {
+                'code': '200',
+                'status': 'success'
+            }
+        }
