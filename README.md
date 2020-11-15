@@ -7,7 +7,8 @@ to be deployed needs to have installed
  * docker v19.03.13
  * docker-compose v1.23.1
  * port 5000
- * python 3.8 (optional for running the tests)
+ * python 3.8 (optional to run the tests)
+ * newman v5.2.1 (optional to run e2e tests)
 
 ## Tests ## 
 For running the tests there is no need to run the docker containers. In such case python3.8 
@@ -20,16 +21,22 @@ cd
 python
 ```
 
-### Integration tests ### 
--TODO-
+### End-to-End tests ### 
+End-to-End testing can be run using newman. Newman is a CLI tool used for running 
+[Postman](https://www.postman.com/) collections.  
+A bash script ```run-e2e-tests.sh``` is provided to run the containers using 
+```docker-compose``` and run the tests. The containers are stoped once tests finish.  
+
+```buildoutcfg
+sudo chmod +x ./run-e2e-tests.sh
+./run-e2e-tests.sh
 ```
-cd 
-python
-```
+What is being tested is the correct HTTP status code returned based on the response 
+sent and the status of the system.  
 
 ## Run the application ## 
 From the application's root directory run 
-```
+```buildoutcfg
 docker-compose up -d
 ```
 
@@ -65,15 +72,15 @@ The metadata-api API consist of two endpoints:
 * POST /upload  
   REQUEST  
   Send the base64 encoded csv file   
-  ```
+  ```buildoutcfg
   { 
     "file": "base64_string" 
   } 
   ```
   RESPONSE 
   
-  200 application/json  
-  ```
+  201 CREATED application/json  
+  ```buildoutcfg
   {
     "data": [
         {
@@ -90,14 +97,15 @@ The metadata-api API consist of two endpoints:
     ],
     "skipped": "string",
     "responce": {
-        "code": "200",
-        "status": "success"
+        "code": "201",
+        "status": "created"
     }
   } 
   ```
   
-  400 application/json  
-  ```
+  400 BAD REQUEST application/json  
+  Returned when missing "file" key from request.
+  ```buildoutcfg
   { 
       "data": { 
           "message": "file upload error" 
@@ -107,10 +115,23 @@ The metadata-api API consist of two endpoints:
           "status": "client error" 
       } 
   } 
+  ```    
+  422 UNPROCESSABLE ENTITY application/json  
+  Returned when problems with base64 encoded string encountered.
+  ```buildoutcfg
+  { 
+      "data": { 
+          "message": "file upload error" 
+      }, 
+      "response": { 
+          "code": "422", 
+          "status": "uprocessible entuty" 
+      } 
+  }
   ```
   
-  500 application/json  
-  ```
+  500 INTERNAL SERVER ERROR application/json  
+  ```buildoutcfg
   { 
       "data": { 
           "message": "server error" 
@@ -125,7 +146,7 @@ The metadata-api API consist of two endpoints:
 * POST /download  
   Make a POST request with a list of all the iswc records required for metadata retrieval.  
   REQUEST  
-  ```
+  ```buildoutcfg
   { 
       "iswc": ["string"]
   } 
@@ -135,7 +156,7 @@ The metadata-api API consist of two endpoints:
  
   200 application/json
   
-  ```
+  ```buildoutcfg
   {
     "file": "string",
     "responce": {
@@ -144,12 +165,23 @@ The metadata-api API consist of two endpoints:
     }
   }
   ```
-
-  404 application/json  
+  
+  400 BAD REQUEST application/json  
+  Returned when missing "iswc" key from request.  
+  
+  ```buildoutcfg
+  {
+    "message": {
+        "iswc": "List of iswc"
+    }
+  }
   ```
+
+  404 NOT FOUND application/json  
+  ```buildoutcfg
   { 
       "data": { 
-          message": "iswc is incorrect or does not exist" 
+          "message": "iswc is incorrect or does not exist" 
       }, 
       "response": { 
           "code": "404", 
@@ -158,8 +190,9 @@ The metadata-api API consist of two endpoints:
   } 
   ```
   
-  500 application/json
-  ```
+  500 INTERNAL SERVER ERROR application/json  
+  
+  ```buildoutcfg
   { 
       "data": { 
           "message": "server error" 

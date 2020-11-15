@@ -3,7 +3,25 @@ from metadata import mongo
 import pandas as pd
 
 
-def _parse_csv_b64_str_to_list(b64_str):
+server_error_responce_500 = {
+    "data": {
+        "message": "server error"
+    },
+    "response": {
+        "code": "500",
+        "status": "server error"
+    }
+}
+
+
+def parse_csv_b64_str_to_list(b64_str):
+    """
+    Function used to parse base64 encoded string (representing csv file)
+    in python dict.
+
+    :param b64_str: base64 encoded string
+    :return: dict
+    """
     csv_file_data = io.StringIO(base64.b64decode(b64_str).decode())
 
     reader = csv.DictReader(csv_file_data)
@@ -11,10 +29,19 @@ def _parse_csv_b64_str_to_list(b64_str):
     for line in reader:
         dict_list.append(line)
 
+    csv_file_data.close()
+
     return dict_list
 
 
 def _update_db(entries):
+    """
+    Function used to insert data to mongoDB.
+    To insert data an iswc No must be provided.
+
+    :param entries: dict
+    :return: dict of inserted data , int of skipped entries
+    """
     added = []
     skipped = 0
     for e in entries:
@@ -48,19 +75,38 @@ def _update_db(entries):
 
 
 def _query_db(iswc):
+    """
+    Function used to querry mongoDB.
+
+    :param iswc: list of iswc No
+    :return: list
+    """
     result = list(mongo.db.music.find({'iswc': {'$in': iswc}}))
     list(map(lambda x: str(x.pop('_id')), result))
 
     return result
 
 
-def _insert_to_db(entries):
+def insert_to_db(entries):
+    """
+    Function used to update mongoDB.
+    An iswc No must be provided with each entry.
+
+    :param entries: list of data
+    :return: list of inserted data and number of skipped
+    """
     added, skipped = _update_db(entries)
 
     return _query_db(added), skipped
 
 
 def _query_db_concate(iswc):
+    """
+    Function used to concat contributors, source and id.
+
+    :param iswc: list of iswc No.
+    :return: list of concated data
+    """
     query_list = _query_db(iswc)
     result = query_list.copy()
 
@@ -84,13 +130,19 @@ def _query_db_concate(iswc):
     return result
 
 
-def _query_to_base64_csv(csv_dict):
+def query_to_base64_csv(iswc):
+    """
+    Function used to retrieve mongoDB data and encode it in 
+    base64 string representing a csv file. 
+    
+    :param iswc: list of iswc No
+    :return: string base64 encoded csv
+    """
     s_buf = io.StringIO()
-    data = _query_db_concate(csv_dict)
+    data = _query_db_concate(iswc)
     df = pd.DataFrame(data)
     res_df = df.set_index('iswc')
     res_df.to_csv(s_buf)
-    #s_buf.close()
 
     res = s_buf.getvalue()
     s_buf.close()

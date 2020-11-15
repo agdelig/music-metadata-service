@@ -1,5 +1,17 @@
 from flask_restful import Resource, reqparse
-from common import _query_db_concate, _query_to_base64_csv
+from common import query_to_base64_csv, server_error_responce_500
+
+
+incorrect_request = {
+    "data": {
+        "message": "iswc is incorrect or does not exist"
+    },
+    "response": {
+        "code": "404",
+        "status": "client error"
+    }
+}
+
 
 class Download(Resource):
 
@@ -14,7 +26,12 @@ class Download(Resource):
 
     def post(self):
         iswcs = self.req_parses.parse_args(strict=True).get('iswc', None)
-        file = _query_to_base64_csv(iswcs)
+        try:
+            file = query_to_base64_csv(iswcs)
+        except KeyError:
+            return incorrect_request, 404
+        except Exception:
+            return server_error_responce_500, 500
 
         return{
             'file': file,

@@ -1,0 +1,285 @@
+{
+	"info": {
+		"_postman_id": "0a3759a3-ae0d-476d-a2ce-e1a41480ca6f",
+		"name": "e2e-2xx-4xx-music-metadata",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "upload-201-valid-b64-string",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "f1f7091f-2eb6-41bc-bfa0-8e5a7b3ccba1",
+						"exec": [
+							"pm.test(\"Status test\", function () {",
+							"    pm.response.to.have.status(201);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"file\": \"dGl0bGUsY29udHJpYnV0b3JzLGlzd2Msc291cmNlLGlkClNoYXBlIG9mIFlvdSxFZHdhcmQgU2hlZXJhbixUOTIwNDY0OTU1OCx3YXJuZXIsMQpTaGFwZSBvZiBZb3UsRWR3YXJkIENocmlzdG9waGVyIFNoZWVyYW4sVDkyMDQ2NDk1NTgsc29ueSwxCkFkdmVudHVyZSBvZiBhIExpZmV0aW1lLE8gQnJpZW4gRWR3YXJkIEpvaG58WW9ya2UgVGhvbWFzIEVkd2FyZHxHcmVlbndvb2QgQ29saW4gQ2hhcmxlcyxUMDEwMTk3NDU5Nyx3YXJuZXIsMgpBZHZlbnR1cmUgb2YgYSBMaWZldGltZSxPIEJyaWVuIEVkd2FyZCBKb2hufFNlbHdheSBQaGlsaXAgSmFtZXMsVDAxMDE5NzQ1OTcsd2FybmVyLDMKTWUgRW5hbW9yw6ksUmF5byBHaWJvIEFudG9uaW98Umlwb2xsIFNoYWtpcmEgSXNhYmVsIE1lYmFyYWssVDkyMTQ3NDU3MTgsdW5pdmVyc2FsLDEKTWUgRW5hbW9yZSxSYXlvIEdpYm8gQW50b25pb3xSaXBvbGwgU2hha2lyYSBJc2FiZWwgTWViYXJhayxUOTIxNDc0NTcxOCx3YXJuZXIsNApKZSBuZSBzYWlzIHBhcyxPYmlzcG8gUGFzY2FsIE1pY2hlbHxGbG9yZW5jZSBMaW9uZWwgSmFjcXVlcywsc29ueSwyCkplIG5lIHNhaXMgcGFzLE9iaXNwbyBQYXNjYWwgTWljaGVsfEZsb3JlbmNlIExpb25lbCBKYWNxdWVzLFQwMDQ2OTUxNzA1LHNvbnksMwo=\"\n}"
+				},
+				"url": {
+					"raw": "127.0.0.1:5000/upload",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "5000",
+					"path": [
+						"upload"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "upload-422-invalid-b64-string",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "a61dfa82-ac7b-4d2b-a30e-e6c741c44b22",
+						"exec": [
+							"pm.test(\"Status test\", function () {",
+							"    pm.response.to.have.status(422);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"file\": \"dGl0bGUsY29udHJpYnV0b3JzLGlzd2Msc291cmNlLGlkClNoYXBlIG9mIFlvdSxFZHdhcmQgU2hlZXJhbixUOTIwNDY0OTU1OCx3YXJuZXIsMQpTaGFwZSBvZiBZb3UsRWR3YXJkIENocmlzdG9waGVyIFNoZWVyYW4sVDkyMDQ2NDk1NTgsc29ueSwxCkFkdmVudHVyZSBvZiBhIExpZmV0aW1lLE8gQnJpZW4gRWR3YXJkIEpvaG58WW9ya2UgVGhvbWFzIEVkd2FyZHxHcmVlbndvb3MTgsdW5pdmVyc2FsLDEKTWUgRW5hbW9yZSxSYXlvIEdpYm8gQW50b25pb3xSaXBvbGwgU2hha2lyYSBJc2FiZWwgTWViYXJhayxUOTIxNDc0NTcxOCx3YXJuZXIsNApKZSBuZSBzYWlzIHBhcyxPYmlzcG8gUGFzY2FsIE1pY2hlbHxGbG9yZW5jZSBMaW9uZWwgSmFjcXVlcywsc29ueSwyCkplIG5lIHNhaXMgcGFzLE9iaXNwbyBQYXNjYWwgTWljaGVsfEZsb3JlbmNlIExpb25lbCBKYWNxdWVzLFQwMDQ2OTUxNzA1LHNvbnksMwo=\"\n}"
+				},
+				"url": {
+					"raw": "127.0.0.1:5000/upload",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "5000",
+					"path": [
+						"upload"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "upload-400-no-b64-string",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "294ad7cb-e747-40c9-ac32-4d7936ca5d91",
+						"exec": [
+							"pm.test(\"Status test\", function () {",
+							"    pm.response.to.have.status(400);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"something\": \"nothing\"\n}"
+				},
+				"url": {
+					"raw": "127.0.0.1:5000/upload",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "5000",
+					"path": [
+						"upload"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "download-200-valid-iswc-list",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "5eb13049-a022-4a57-a94e-174743678415",
+						"exec": [
+							"pm.test(\"Status test\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"iswc\": [\"T0046951705\"]}"
+				},
+				"url": {
+					"raw": "127.0.0.1:5000/download",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "5000",
+					"path": [
+						"download"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "download-404-unknown-iswc-list",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "39b69bcd-8c07-4241-8802-4a4214639f4a",
+						"exec": [
+							"pm.test(\"Status test\", function () {",
+							"    pm.response.to.have.status(404);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"iswc\": [\"T004695170\"]}"
+				},
+				"url": {
+					"raw": "127.0.0.1:5000/download",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "5000",
+					"path": [
+						"download"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "download-400-no-iswc-list",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "3231e989-6807-408a-a4c5-9e25e4416720",
+						"exec": [
+							"pm.test(\"Status test\", function () {",
+							"    pm.response.to.have.status(400);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"something\": \"nothing\"\n}"
+				},
+				"url": {
+					"raw": "127.0.0.1:5000/download",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "5000",
+					"path": [
+						"download"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
