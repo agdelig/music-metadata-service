@@ -37,7 +37,7 @@ sent and the status of the system.
 ## Run the application ## 
 From the application's root directory run 
 ```buildoutcfg
-docker-compose up -d
+docker-compose up -d --build
 ```
 
 ## Assumptions ## 

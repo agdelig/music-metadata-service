@@ -1,7 +1,7 @@
 # /bin/bash
 set -e
 
-docker-compose up -d
+docker-compose up -d --build
 
 newman run ./e2e-tests/e2e-2xx-4xx-music-metadata.postman_collection.json
 
