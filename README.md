@@ -47,9 +47,15 @@ docker-compose up -d --build
 ```
 
 ## Assumptions ## 
+Files are consumed and served as base64 encoded strings. This coice was made to 
+serve the whole API in a json format and avoid multipart requests and responses. 
+Encoding and decoding is handled by any client application sending requests or 
+consuming responses.  
 The user provides csv files with metadata. This data is used to add new entries 
 or update existing ones in the Database.  
 It is assumed that:  
+* files uploaded need to be base64 encoded  
+* the /download endpoint serves base64 encoded csv files  
 * csv files contain the following headers:  
 * title  
 * contributors  
