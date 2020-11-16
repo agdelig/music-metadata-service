@@ -15,10 +15,11 @@ For running the tests there is no need to run the docker containers. In such cas
 needs to be installed.
 
 ### Unit tests ### 
--TODO-
+The test use the pytest module 
 ```
-cd 
-python
+pip install -f requirements.txt
+pip install -f requirements-test.txt
+pytest tests/
 ```
 
 ### End-to-End tests ### 
@@ -32,7 +33,7 @@ sudo chmod +x ./run-e2e-tests.sh
 ./run-e2e-tests.sh
 ```
 What is being tested is the correct HTTP status code returned based on the response 
-sent and the status of the system.  
+sent and the status of the system and that the json schema is correct.  
 
 ## Run the application ## 
 From the application's root directory run 
