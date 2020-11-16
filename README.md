@@ -112,15 +112,11 @@ The metadata-api API consist of two endpoints:
   400 BAD REQUEST application/json  
   Returned when missing "file" key from request.
   ```buildoutcfg
-  { 
-      "data": { 
-          "message": "file upload error" 
-      }, 
-      "response": { 
-          "code": "400", 
-          "status": "client error" 
-      } 
-  } 
+  {
+    "message": {
+        "file": "Base64 encoded csv file"
+    }
+  }
   ```    
   422 UNPROCESSABLE ENTITY application/json  
   Returned when problems with base64 encoded string encountered.
