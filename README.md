@@ -15,10 +15,12 @@ For running the tests there is no need to run the docker containers. In such cas
 needs to be installed.
 
 ### Unit tests ### 
-The test use the pytest module 
-```
-pip install -f requirements.txt
-pip install -f requirements-test.txt
+The test use the pytest module  
+From the project's root folder  
+
+```buildoutcfg
+pip install -r metadata_api/requirements.txt
+pip install -r metadata_api/requirements-test.txt
 pytest tests/
 ```
 
@@ -28,6 +30,8 @@ End-to-End testing can be run using newman. Newman is a CLI tool used for runnin
 A bash script ```run-e2e-tests.sh``` is provided to run the containers using 
 ```docker-compose``` and run the tests. The containers are stoped once tests finish.  
 
+From the project's root folder  
+
 ```buildoutcfg
 sudo chmod +x ./run-e2e-tests.sh
 ./run-e2e-tests.sh
@@ -36,7 +40,8 @@ What is being tested is the correct HTTP status code returned based on the respo
 sent and the status of the system and that the json schema is correct.  
 
 ## Run the application ## 
-From the application's root directory run 
+From the project's root folder  
+
 ```buildoutcfg
 docker-compose up -d --build
 ```
