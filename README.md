@@ -16,11 +16,11 @@ needs to be installed.
 
 ### Unit tests ### 
 The test use the pytest module  
-From the project's root folder  
+From the metadata-api folder  
 
 ```buildoutcfg
-pip install -r metadata_api/requirements.txt
-pip install -r metadata_api/requirements-test.txt
+pip install -r requirements.txt
+pip install -r requirements-test.txt
 pytest tests/
 ```
 
